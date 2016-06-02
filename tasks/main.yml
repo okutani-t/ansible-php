@@ -1,0 +1,41 @@
+---
+- name: install the php5.6
+  yum: name=php state=present enablerepo=remi,remi-php56
+
+- name: install dependencies for php extension
+  yum: name={{ item }} state=present enablerepo=epel,remi,remi-php56
+  with_items:
+    - libtidy
+    - libmcrypt
+
+- name: install php extension
+  yum: name={{ item }} state=present enablerepo=remi,remi-php56
+  with_items:
+    - php-opcache
+    - php-devel
+    - php-mbstring
+    - php-mcrypt
+    - php-mysqlnd
+    - php-pgsql
+    - php-phpunit-PHPUnit
+    - php-gd
+    - php-pecl-xdebug
+    - php-pecl-xhprof
+
+---
+- name: install the composer
+  shell: >
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin && mv /usr/local/bin/composer.phar /usr/local/bin/composer
+    creates=/usr/local/bin/composer
+  failed_when: False
+
+- name: composer self-update
+  shell: /usr/local/bin/composer self-update
+
+- name: install the imagick
+  pear: name=pecl/imagick state=present
+
+- name: add imagick.so to php.ini
+  lineinfile:
+    dest: /etc/php.ini
+    line: extension=imagick.so
