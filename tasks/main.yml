@@ -22,7 +22,6 @@
     - php-pecl-xdebug
     - php-pecl-xhprof
 
----
 - name: install the composer
   shell: >
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin && mv /usr/local/bin/composer.phar /usr/local/bin/composer
